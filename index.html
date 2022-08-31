@@ -70,6 +70,20 @@
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+		
+		<style>
+        .blink {
+            animation: blinker 1.5s linear infinite;
+            color: red;
+            font-family: sans-serif;
+        }
+        @keyframes blinker {
+            50% {
+                opacity: 0;
+            }
+        }
+    </style>
+		
 	</head>
 	
 	<body>
@@ -79,7 +93,7 @@
 				<h3>Social Nexus Foundation</h3>
 				<p>Fill the details below carefully for e-Certficate</p>
 				
-				<p style="color: red">Due to updated gmail policy email is not being sent</p>
+				<p class="blink">Due to updated gmail policy email is not being sent</p>
 			</div>
 	
 	
