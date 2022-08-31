@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>SNF e-Certificate</title>
+	<link rel="stylesheet" href="form.css">
+
+</head>
+<body>
+	
+
+	<?php
+	if(isset($_POST['name'])){
+		header ('content-type:image/jpeg');
+			$font= realpath('BRUSHSCI.TTF');
+			$image=imagecreatefromjpeg("certificate_formate/certificate10.jpg");
+			$color=imagecolorallocate($image,19,21,22);
+			$name="";
+			imagettftext($image,50,0,760,595,$color,$font,$_POST['name']);
+			$date="";
+			imagettftext($image,50,0,700,810,$color,realpath('AGENCYR.TTF'),$_POST['clg']);
+			$file=time();
+		$file_path="certificate/".$file.".jpg";
+		$file_path_pdf="certificate/".$file.".pdf";
+		imagejpeg($image,$file_path);
+		imagedestroy($image);
+	
+		require('fpdf.php');
+		
+		$pdf=new FPDF();
+		$pdf->AddPage();
+		$pdf->Image($file_path,0,0,210,150);
+		$pdf->Output($file_path_pdf,"F");
+	
+		include('smtp/PHPMailerAutoload.php');
+		$mail=new PHPMailer();
+		$mail->isSMTP();
+		$mail->Host='smtp.gmail.com';
+		$mail->Port=587;
+		$mail->SMTPSecure="tls";
+		$mail->SMTPAuth=true;
+		$mail->Username="careerniketan@gmail.com";
+		$mail->Password="Nil@78700";
+		$mail->setFrom("careerniketan@gmail.com");
+		$mail->addAddress($_POST['email']);
+		$mail->isHTML(true);
+		$mail->Subjet="Certificate Generated";
+		$mail->Body="Certificate Generated";
+		$mail->addAttachment($file_path_pdf);
+		$mail->SMTPOptions=array("ssl"=>array(
+			"verify_peer"=>false,
+			"verify_peer_name"=>false,
+			"allow_self_signed"=>false,
+		));
+		if($mail->send()){
+			echo "Send On Email";
+		}else{
+			echo $mail->ErrorInfo;
+		}
+	}
+	?>
+	<!DOCTYPE html>
+	<html lang="en">
+	
+	<head>
+		
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+	</head>
+	
+	<body>
+	
+		<div class="container">
+			<div class="jumbotron">
+				<h3>Social Nexus Foundation</h3>
+				<p>Fill the details below carefully for e-Certficate</p>
+			</div>
+	
+	
+			<form action="" method="POST" enctype="multipart/form-data">
+	
+	
+				<div class="form">
+	
+					<div class="inputfield">
+	
+						<label><b>Full Name</b></label>
+	
+						<input type="text" placeholder="Full Name" name="name" class="input" required>
+	
+					</div>
+					<br>
+	
+					<div class="inputfield">
+	
+						<label><b>College Name</b></label>
+	
+						<input type="text" placeholder="College Name" name="clg" class="input" required>
+	
+					</div>
+					<br>
+					<div class="inputfield">
+	
+	
+						<label><b>Your Email</b></label>
+	
+						<input type="email" placeholder="Email" name="email" class="input" required>
+	
+					</div>
+					<br>
+					<div class="inputfield">
+	
+						<input type="submit" value="submit" name="submit" class="btn btn-success">
+	
+					</div>
+	
+	
+				</div>
+	
+		</div>
+	
+	
+		</div>
+	
+	</body>
+	
+	</html>
+
